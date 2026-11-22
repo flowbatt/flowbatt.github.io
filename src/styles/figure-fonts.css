@@ -1,0 +1,26 @@
+/* Source Sans 3, self-hosted as the page's single typeface family.
+   Unmodified Adobe release 3.052R; source and SIL Open Font License:
+   public/fonts/SOURCE-SANS-3-SOURCE.txt and LICENSE-SOURCE-SANS-3.txt. */
+@font-face {
+  font-family: 'Source Sans 3';
+  src: url('/fonts/source-sans-3-regular.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Source Sans 3';
+  src: url('/fonts/source-sans-3-semibold.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Source Sans 3';
+  src: url('/fonts/source-sans-3-bold.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}

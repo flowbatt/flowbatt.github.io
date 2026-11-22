@@ -1,0 +1,67 @@
+Source Sans 3 — official sources, license, and validation
+=======================================================
+
+Acquired: 2026-11-22
+Family: Source Sans 3
+Version: 3.052
+Official repository: https://github.com/adobe-fonts/source-sans
+Pinned release: https://github.com/adobe-fonts/source-sans/releases/tag/3.052R
+
+The files are unmodified official static WOFF2 assets from Adobe. Only their
+local filenames are lowercased and hyphenated. No font data was modified,
+converted, or subsetted. Fonts are self-hosted; no external font service or
+system font installation is used.
+
+Local: source-sans-3-regular.woff2
+Weight: 400, normal
+Source:
+https://raw.githubusercontent.com/adobe-fonts/source-sans/3.052R/WOFF2/TTF/SourceSans3-Regular.ttf.woff2
+Bytes: 109632
+SHA-256: 53492fb3a0def77354f166a55d09b63a10855e91c206c7620a81cf56e97f8ec3
+
+Local: source-sans-3-semibold.woff2
+Weight: 600, normal
+Source:
+https://raw.githubusercontent.com/adobe-fonts/source-sans/3.052R/WOFF2/TTF/SourceSans3-Semibold.ttf.woff2
+Bytes: 108900
+SHA-256: 47b9b661b9f395fe7f0d0e119637fba5c8dad97bde3df60066fd24229c0792f4
+
+Local: source-sans-3-bold.woff2
+Weight: 700, normal
+Source:
+https://raw.githubusercontent.com/adobe-fonts/source-sans/3.052R/WOFF2/TTF/SourceSans3-Bold.ttf.woff2
+Bytes: 108640
+SHA-256: 8d35c6d40e750a4ee23bbbba2bd604ad098d172907369b43281507e16b8e2e7a
+
+License
+-------
+SIL Open Font License 1.1; Copyright 2010-2022 Adobe, reserved font name Source.
+The complete unmodified official license accompanies the fonts:
+Local: LICENSE-SOURCE-SANS-3.txt
+Source:
+https://raw.githubusercontent.com/adobe-fonts/source-sans/3.052R/LICENSE.md
+
+Keep the copyright notice and license with redistributed fonts. The license
+allows embedding and redistribution subject to its terms.
+
+Validation
+----------
+All three WOFF2 files were parsed with the existing local fontTools package.
+They report Source Sans 3, version 3.052, the expected OS/2 usWeightClass
+(400/600/700), no fvar variable-font table, and OS/2 fsType=0.
+
+All three Unicode cmaps correctly map U+00B1 to plusminus and U+2212 to minus.
+Greek coverage was verified for Delta, Theta, Sigma, Omega, alpha, beta,
+gamma, delta, theta, lambda, mu, pi, sigma, phi, and omega. Latin text, digits,
+spaces, and basic punctuation used on the page are covered as well.
+
+The active CSS declares only the Source Sans 3 family. The schematic retains
+its original 700 weight, font sizes, geometry, palette, data, axes, and timing.
+Its SVG background contains no text/font/style nodes or embedded font data;
+all visible schematic text is in the HTML/inline-SVG overlay and inherits
+Source Sans 3. No background regeneration was required.
+
+Historical Computer Modern and STIX assets/licenses remain as provenance for
+previous iterations, but their @font-face declarations have been removed and
+they are not loaded by the current font stylesheet. No italic face is needed
+by the current upright page and schematic typography.

@@ -1,0 +1,16 @@
+{
+  "name": "flowbatt-project-page",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --host 127.0.0.1",
+    "dev:status": "astro dev status",
+    "dev:stop": "astro dev stop",
+    "build": "astro build",
+    "preview": "astro preview --host 127.0.0.1"
+  },
+  "dependencies": {
+    "astro": "7.3.8"
+  }
+}

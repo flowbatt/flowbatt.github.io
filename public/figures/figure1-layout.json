@@ -1,0 +1,497 @@
+{
+  "source": "manuscript/figs/drawing_artwork.svg",
+  "labels": "cameraready/figs/drawing_latex.tex",
+  "viewBox": [
+    0,
+    0,
+    178.02093,
+    72.192085
+  ],
+  "panelViewBoxes": {
+    "training": [
+      0,
+      0,
+      178.02093,
+      36.4
+    ],
+    "conditioning": [
+      0,
+      38.55,
+      70.4,
+      33.642085
+    ],
+    "inference": [
+      71.15,
+      38.55,
+      106.87093,
+      33.642085
+    ]
+  },
+  "panelStructure": {
+    "enclosingBordersRemoved": true,
+    "removedPathIds": {
+      "training": "path1227",
+      "conditioning": "path1235",
+      "inference": "path1231"
+    },
+    "originalPathData": {
+      "training": "M 12.197809,63.568583 H 189.91565 V 99.657236 H 12.197809 Z",
+      "conditioning": "m 12.197873,102.0895 h 70.061925 v 33.40181 H 12.197873 Z",
+      "inference": "M 83.322562,102.0895 H 189.91475 v 33.40181 H 83.322562 Z"
+    },
+    "originalPathTransform": "translate(-12.0463, -63.417)",
+    "layout": "Original panel extents are retained in panelViewBoxes for provenance. The overlay supplies open headings and short rules instead of enclosing panel boxes; model geometry and alignment are unchanged."
+  },
+  "boxes": {
+    "capacity": [
+      15.5,
+      52.5,
+      11,
+      11
+    ],
+    "input": [
+      80,
+      52.5,
+      16,
+      11
+    ],
+    "output": [
+      150,
+      52.5,
+      16,
+      11
+    ],
+    "originalCapacityFrame": [
+      11.372319,
+      49.542807,
+      12.5644,
+      15.299809
+    ],
+    "originalInputFrame": [
+      76.691693,
+      50.836013,
+      16.117589,
+      14.493984
+    ],
+    "originalOutputFrame": [
+      156.302147,
+      50.836024,
+      16.117589,
+      14.493986
+    ],
+    "inferenceDiT": [
+      108,
+      51.3018715,
+      26.886335,
+      13.396257
+    ],
+    "inferenceBlocks": [
+      [
+        109.4910538717,
+        52.0859720332,
+        5.2044445093,
+        11.8280551954
+      ],
+      [
+        115.7243148758,
+        52.0859720332,
+        5.2044445093,
+        11.8280551954
+      ],
+      [
+        121.957575533,
+        52.0859720332,
+        5.2044445093,
+        11.8280551954
+      ],
+      [
+        128.1908367972,
+        52.0859720332,
+        5.2044445093,
+        11.8280551954
+      ]
+    ],
+    "trainingData": [
+      43,
+      14,
+      16,
+      11
+    ],
+    "trainingNoise": [
+      13,
+      14,
+      16,
+      11
+    ],
+    "trainingInterpolant": [
+      80,
+      14,
+      16,
+      11
+    ],
+    "trainingVelocity": [
+      150,
+      14,
+      16,
+      11
+    ],
+    "originalTrainingDataFrames": [
+      [
+        26.440632,
+        9.886334,
+        14.338141,
+        12.893792
+      ],
+      [
+        34.369016,
+        7.170276,
+        14.338141,
+        12.893792
+      ],
+      [
+        30.313174,
+        12.9559,
+        14.338141,
+        12.893792
+      ]
+    ],
+    "originalTrainingNoiseFrames": [
+      [
+        59.213715,
+        11.547055,
+        5.518868,
+        4.962925
+      ],
+      [
+        62.243781,
+        10.175165,
+        5.518868,
+        4.962926
+      ],
+      [
+        61.118178,
+        12.691972,
+        5.518868,
+        4.962926
+      ]
+    ],
+    "originalTrainingInterpolantFrames": [
+      [
+        80.25882,
+        14.7596,
+        10.783024,
+        9.696044
+      ],
+      [
+        85.026162,
+        12.079131,
+        10.783024,
+        9.696044
+      ],
+      [
+        82.330881,
+        17.440064,
+        10.783024,
+        9.696044
+      ]
+    ],
+    "originalTrainingVelocityFrames": [
+      [
+        135.745648,
+        14.980951,
+        10.783024,
+        9.696797
+      ],
+      [
+        141.665935,
+        12.300488,
+        10.783024,
+        9.696799
+      ],
+      [
+        139.466677,
+        17.217944,
+        10.783024,
+        9.696799
+      ]
+    ],
+    "trainingDiT": [
+      108,
+      12.8018715,
+      26.886335,
+      13.396257
+    ],
+    "trainingBlocks": [
+      [
+        109.4910538717,
+        13.5859720332,
+        5.2044445093,
+        11.8280551954
+      ],
+      [
+        115.7243148758,
+        13.5859720332,
+        5.2044445093,
+        11.8280551954
+      ],
+      [
+        121.957575533,
+        13.5859720332,
+        5.2044445093,
+        11.8280551954
+      ],
+      [
+        128.1908367972,
+        13.5859720332,
+        5.2044445093,
+        11.8280551954
+      ]
+    ],
+    "encoder": [
+      32.5839375671,
+      52.5110183784,
+      12.3081804327,
+      10.9779632433
+    ],
+    "embedding": [
+      53.5322549514,
+      54.8931765881,
+      10.4920955289,
+      6.2136468238
+    ],
+    "originalTrainingDiT": [
+      103.0117075337,
+      11.1938315862,
+      26.8863352649,
+      13.3962571267
+    ],
+    "originalInferenceDiT": [
+      113.4517761694,
+      50.5356974022,
+      23.1669482045,
+      11.5430530762
+    ],
+    "originalTrainingBlocks": [
+      [
+        104.5027614054,
+        11.9779321194,
+        5.2044445093,
+        11.8280551954
+      ],
+      [
+        110.7360224095,
+        11.9779321194,
+        5.2044445093,
+        11.8280551954
+      ],
+      [
+        116.9692830667,
+        11.9779321194,
+        5.2044445093,
+        11.8280551954
+      ],
+      [
+        123.2025443309,
+        11.9779321194,
+        5.2044445093,
+        11.8280551954
+      ]
+    ],
+    "originalInferenceBlocks": [
+      [
+        114.736561,
+        51.211327,
+        4.484475,
+        10.191792
+      ],
+      [
+        120.107529,
+        51.211327,
+        4.484475,
+        10.191792
+      ],
+      [
+        125.478496,
+        51.211327,
+        4.484475,
+        10.191792
+      ],
+      [
+        130.849464,
+        51.211327,
+        4.484475,
+        10.191792
+      ]
+    ],
+    "originalEncoder": [
+      32.5839375671,
+      51.6736120187,
+      12.3081804327,
+      10.9779632433
+    ],
+    "originalEmbedding": [
+      53.5322549514,
+      54.0557778064,
+      10.4920955289,
+      6.2136468238
+    ]
+  },
+  "artworkAlignment": {
+    "bounds": "Geometric path/rectangle bounds in root viewBox coordinates, excluding strokes. Leave at least 0.25 units of connector clearance around encoder/embedding shapes.",
+    "training": {
+      "sourceGroup": "g13024",
+      "translation": [
+        4.9882924662999955,
+        1.6080399138000008
+      ]
+    },
+    "inference": {
+      "sourceGroup": "g13024",
+      "replacedGroup": "g13024-7",
+      "translation": [
+        4.9882924662999955,
+        40.1080399138
+      ]
+    },
+    "encoder": {
+      "sourceGroup": "g62414",
+      "translation": [
+        0,
+        0.8374063596500019
+      ],
+      "strokePadding": 0.17058
+    },
+    "embedding": {
+      "sourceGroup": "g3131",
+      "translation": [
+        0,
+        0.8373987816999979
+      ]
+    },
+    "layout": "Six equal 16-by-11 plots; both identical DiTs at x=108; training and inference centerlines at y=19.5 and y=58. Encoder and embedding share y=58. Original DiT dimensions/styles are reused without scaling; their recorded display dimensions are rounded to six decimals."
+  },
+  "training": {
+    "layout": "The overlay supplies equal-size plots and animated colored links. The original training DiT artwork is translated onto the shared model column, preserving its styling. Enclosing panel borders are removed in favor of open overlay headings/rules.",
+    "originalStackOrder": "Original painter order, with the final card in each original frame array foremost.",
+    "state": "x_t = (1-t) x_0 + t x_1",
+    "target": "u = x_1 - x_0",
+    "prediction": "v_theta(x_t, t, c)",
+    "loss": "mean squared error between predicted and target velocity",
+    "lossLabelArea": [
+      69,
+      2.2,
+      76,
+      6
+    ],
+    "removedPlotStackGroups": {
+      "data": "g51346",
+      "noise": "g51471-7",
+      "interpolant": "g51497",
+      "velocity": "g51471"
+    },
+    "removedInputArrowIds": [
+      "g2593",
+      "path2597"
+    ],
+    "removedDiffusionLossIds": [
+      "g2709",
+      "path2713",
+      "path2715"
+    ]
+  },
+  "conditioning": {
+    "removedPlotGroup": "g67648",
+    "capacityFrameRemoved": true,
+    "layout": "The overlay supplies one capacity matrix and animated colored connections. Original Q-encoder and embedding shapes are translated vertically onto the inference centerline without scaling."
+  },
+  "inference": {
+    "removedPlotGroups": {
+      "input": "g52133",
+      "output": "g52142"
+    },
+    "inputOutputFramesRemoved": true,
+    "originalFrameBounds": "boxes.originalInputFrame and boxes.originalOutputFrame retain source-art bounds; boxes.input and boxes.output define equal-size displayed plots. The original training DiT artwork is cloned at the inference centerline so both networks have identical size and styling."
+  },
+  "connectors": {
+    "staticConnectorsRemoved": true,
+    "removedGroups": {
+      "capacityEncoder": [
+        "path1351",
+        "path1349"
+      ],
+      "trainingConditioning": [
+        "g9465"
+      ],
+      "inferenceConditioning": [
+        "g9465-9"
+      ],
+      "inferenceInput": [
+        "path4183",
+        "path4185"
+      ],
+      "inferenceOutput": [
+        "path4189",
+        "path4191"
+      ],
+      "inferenceFeedback": [
+        "path3673",
+        "path3675"
+      ]
+    },
+    "layout": "All original static connectors and arrowheads are removed; animated colored links are supplied by the overlay."
+  },
+  "originalFeedbackPath": "M138.86637 57.26675 h2.42958 v-11.76302 h-34.95111 v7.15892",
+  "colors": {
+    "curve": "#e375c2",
+    "ditFill": "#ad5db5",
+    "ditFillOpacity": 0.733333,
+    "ditStroke": "#9137a3",
+    "ditOuterFill": "#eaaedd",
+    "ditOuterFillOpacity": 0.470588,
+    "ditOuterStroke": "#a02c89",
+    "encoderFill": "#ffd5e5",
+    "encoderStroke": "#ff5599",
+    "panelStroke": "#7e9fb6",
+    "panelStrokeOpacity": 0.796078,
+    "capacityColormap": "cool"
+  },
+  "removed": [
+    "path1227/path1235/path1231 (enclosing borders of the training, conditioning, and inference panels)",
+    "g52133/g52142 (complete inference input/output plots: curves, backing, and frames)",
+    "g51346/g51471-7/g51497/g51471 (complete original training plot stacks, including frames and curves)",
+    "g2593/path2597 (original training input connector and arrowhead)",
+    "g2709/path2713/path2715 (diffusion-specific loss connector and arrowheads)",
+    "g67648 (capacity contours, backing, frame, and ticks)",
+    "g9465/g9465-9 (training and inference conditioning arrows/arrowheads)",
+    "path3673/path3675 (inference feedback connector and arrowhead)",
+    "path4183/path4185/path4189/path4191 (inference input/output connectors and arrowheads)",
+    "path1349/path1351 (lavender capacity/encoder/embedding connectors)"
+  ],
+  "removedIds": [
+    "g52133",
+    "g52142",
+    "g51346",
+    "g51471-7",
+    "g51497",
+    "g51471",
+    "g2593",
+    "path2597",
+    "g2709",
+    "path2713",
+    "path2715",
+    "g67648",
+    "path1351",
+    "path1349",
+    "g9465",
+    "g9465-9",
+    "path4183",
+    "path4185",
+    "path4189",
+    "path4191",
+    "path3673",
+    "path3675",
+    "path1227",
+    "path1235",
+    "path1231"
+  ]
+}

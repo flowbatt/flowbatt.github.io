@@ -1,0 +1,60 @@
+---
+interface Props { id: string; hero?: boolean; }
+const { id, hero = false } = Astro.props;
+// Deliberately synthetic geometry for reviewing the visual design. No model data.
+const x = (t: number) => 64 + t * 540;
+const y = (t: number, offset = 0) => 86 + t * 42 + Math.pow(t, 3.1) * (130 + offset);
+const times = Array.from({ length: 61 }, (_, i) => i / 60);
+const path = (offset = 0) => times.map((t, i) => `${i ? 'L' : 'M'}${x(t).toFixed(2)},${y(t, offset).toFixed(2)}`).join(' ');
+const area = `${path(-49)} ${times.slice().reverse().map(t => `L${x(t).toFixed(2)},${y(t, 49).toFixed(2)}`).join(' ')} Z`;
+const samples = [-52, -43, -31, -20, -12, 6, 14, 24, 37, 51];
+---
+<svg class:list={['trajectory-plot', { 'hero-plot': hero }]} viewBox="0 0 680 360" role="img" aria-labelledby={`${id}-title ${id}-desc`}>
+  <title id={`${id}-title`}>Illustrative battery health trajectories</title>
+  <desc id={`${id}-desc`}>Early observed measurements are shown in black, an illustrative reference trajectory is dashed navy, and possible degradation trajectories and their shaded spread are magenta. This schematic uses invented curves, not model predictions.</desc>
+  <defs>
+    <linearGradient id={`${id}-spread`} x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="var(--plot-prediction)" stop-opacity="0.01" />
+      <stop offset="100%" stop-color="var(--plot-prediction)" stop-opacity="0.19" />
+    </linearGradient>
+    <clipPath id={`${id}-clip`}><rect x="64" y="56" width="548" height="257" /></clipPath>
+  </defs>
+  <g class="plot-grid" stroke="var(--line, #dde1e7)" stroke-width="1">
+    {[86, 162, 238, 314].map(yy => <line x1="64" y1={yy} x2="612" y2={yy} />)}
+    {[64, 199, 334, 469, 604].map(xx => <line x1={xx} y1="56" x2={xx} y2="314" stroke-dasharray="2 5" />)}
+  </g>
+  <rect x="64" y="56" width="40" height="258" fill="var(--plot-reference)" opacity="0.07" />
+  <line x1="104" y1="56" x2="104" y2="314" stroke="#96999f" stroke-dasharray="4 5" />
+  <g class="plot-labels" fill="var(--ink, #111111)">
+    <text x="64" y="31">Battery health (SOH)</text>
+    <text x="610" y="31" text-anchor="end">Possible futures</text>
+    <text x="57" y="91" text-anchor="end">100%</text>
+    <text x="57" y="243" text-anchor="end">80%</text>
+    <text x="64" y="339">Early cycles</text>
+    <text x="612" y="339" text-anchor="end">Battery cycle number →</text>
+  </g>
+  <g clip-path={`url(#${id}-clip)`}>
+    <path class="illustrative-band" d={area} fill={`url(#${id}-spread)`} />
+    <g class="sample-paths" fill="none" stroke="var(--plot-prediction)" stroke-width="1.4" opacity="0.52">
+      {samples.map(offset => <path d={path(offset)} />)}
+    </g>
+    <path class="reference-path" d={path(-15)} fill="none" stroke="var(--plot-reference)" stroke-width="3" stroke-dasharray="8 5" stroke-linecap="round" />
+    <path d="M64 86 L77 87 L90 88 L104 89" fill="none" stroke="var(--ink, #111111)" stroke-width="4" stroke-linecap="round" />
+    {[0, 1, 2, 3].map(i => <circle cx={64 + i * 13.3} cy={86 + i} r="3.5" fill="var(--ink, #111111)" />)}
+    <g class="threshold-line" visibility={hero ? 'hidden' : 'visible'}>
+      <line x1="64" y1="238" x2="612" y2="238" stroke="#737780" stroke-dasharray="5 5" />
+      <text class="threshold-label" x="115" y="229" fill="var(--muted, #5d6470)">Illustrative end-of-life threshold</text>
+    </g>
+  </g>
+  <circle class="plot-endpoint reference-path" cx="604" cy={y(1, -15)} r="5" fill="var(--plot-reference)" stroke="#fff" stroke-width="3" />
+</svg>
+
+<style>
+  .trajectory-plot { display: block; width: 100%; height: auto; font-family: var(--figure-font, 'Computer Modern', Georgia, serif); }
+  .plot-labels { font-size: 16px; }
+  .threshold-label { font-size: 15px; }
+  @media (max-width: 600px) {
+    .plot-labels { font-size: 24px; }
+    .threshold-label { font-size: 22px; }
+  }
+</style>

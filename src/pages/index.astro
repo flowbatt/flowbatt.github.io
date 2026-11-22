@@ -1,0 +1,175 @@
+---
+import '../styles/figure-fonts.css';
+import '../styles/global.css';
+import MethodOverview from '../components/MethodOverview.astro';
+import RulPlots from '../components/RulPlots.astro';
+import XaiHeatmaps from '../components/XaiHeatmaps.astro';
+import PaperText from '../components/PaperText.astro';
+import { authors, affiliations, resources, citation } from '../data/content';
+import { tldr, overview, methodology, xaiDiscussion, xaiCaption, resultsIntro, resultsFindings, sohTable, rulDiscussion, rulCaption, closingConclusion, closingOutlook, acknowledgments } from '../data/paperContent';
+const base = import.meta.env.BASE_URL;
+const title = 'FlowBatt: Flow Matching for Probabilistic Battery Degradation Prediction';
+const canonical = Astro.site ? new URL(base, Astro.site).href : undefined;
+const socialImage = Astro.site ? new URL(`${base}social-card.png`, Astro.site).href : undefined;
+const description = 'FlowBatt uses flow matching to predict probabilistic battery degradation trajectories from early-cycle capacity measurements.';
+const scholarlyArticle = {
+  '@context': 'https://schema.org', '@type': 'ScholarlyArticle',
+  headline: title, description, url: resources.paper,
+  author: authors.map(author => ({ '@type': 'Person', name: author.name })),
+  isAccessibleForFree: true, inLanguage: 'en',
+};
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    {(!Astro.site || import.meta.env.DEV) && <meta name="robots" content="noindex, nofollow" />}
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content="FlowBatt" />
+    {canonical && <meta property="og:url" content={canonical} />}
+    {socialImage && <>
+      <meta property="og:image" content={socialImage} />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:image:alt" content="FlowBatt — Flow Matching for Probabilistic Battery Degradation Prediction. NeurIPS 2026." />
+    </>}
+    <meta name="twitter:card" content={socialImage ? 'summary_large_image' : 'summary'} />
+    <script type="application/ld+json" set:html={JSON.stringify(scholarlyArticle).replace(/</g, '\\u003c')} />
+    <meta name="theme-color" content="#17365d" />
+    <link rel="preload" href={`${base}fonts/source-sans-3-regular.woff2`} as="font" type="font/woff2" crossorigin />
+    <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="paper-header">
+      <div class="title-width">
+        <h1><span class="project-name">FlowBatt</span><span class="paper-title">Flow Matching for Probabilistic<br class="desktop-break" /> Battery Degradation Prediction</span></h1>
+        <div class="author-list" aria-label="Authors">
+          {authors.map(author => <span>{author.name}<sup>{author.affiliation}{author.corresponding ? '*' : ''}</sup></span>)}
+        </div>
+        <p class="institutions">Technische Universität Braunschweig <span aria-hidden="true">·</span> Clausthal University of Technology</p>
+        <details class="author-affiliations">
+          <summary>Full affiliations <span aria-hidden="true">+</span></summary>
+          <ol>{affiliations.map(name => <li>{name}, Germany</li>)}</ol>
+          <p>* Corresponding author: <a href="mailto:h.eivazi@tu-braunschweig.de">h.eivazi@tu-braunschweig.de</a></p>
+        </details>
+        <p class="venue">NeurIPS 2026 <span aria-hidden="true">·</span> Main Track</p>
+        <div class="publication-links" aria-label="Publication resources">
+          <a href={resources.paper} class="resource-button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 2h7l4 4v12H5zM12 2v5h4M8 11h5M8 14h5" /></svg>Paper</a>
+          <a href={resources.code} class="resource-button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m6 5-5 5 5 5m8-10 5 5-5 5M12 2 8 18" /></svg>Code</a>
+          <a href={resources.models} class="resource-button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2 2 6l8 4 8-4-8-4ZM2 10l8 4 8-4M2 14l8 4 8-4" /></svg>Models</a>
+          <a href="#results" class="resource-button secondary"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 3v14h14M6 6c4 0 4 7 10 7M6 9c4 0 6 6 10 6" /></svg>Results</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="summary-section" aria-label="Overview">
+        <div class="reading-width">
+          <div class="tldr"><p><strong>TL;DR</strong> {tldr}</p></div>
+          <div class="prose"><p>{overview}</p></div>
+        </div>
+      </section>
+
+      <section class="article-section overview-section" id="methodology" aria-labelledby="methodology-title">
+        <div class="reading-width">
+          <h2 class="section-heading" id="methodology-title">Methodology</h2>
+          <div class="prose"><p><PaperText text={methodology} /></p></div>
+        </div>
+        <figure class="reading-width overview-figure">
+          <MethodOverview />
+        </figure>
+      </section>
+
+      <section class="article-section" id="results" aria-labelledby="results-title">
+        <div class="reading-width">
+          <h2 class="section-heading" id="results-title">Results and discussion</h2>
+          <div class="prose"><h3>SOH-trajectory prediction</h3><p><PaperText text={resultsIntro} /></p></div>
+        </div>
+        <div class="results-width" id="soh-results-table">
+          <p class="table-caption" id="soh-table-caption"><strong>Table 1.</strong> {sohTable.caption}</p>
+          <div class="table-scroll" tabindex="0" role="region" aria-label="Trajectory-wise SOH prediction results; scroll horizontally on small screens">
+            <table class="soh-results-table" aria-labelledby="soh-table-caption">
+              <thead><tr><th scope="col">Method</th>{sohTable.columns.map(column => <th scope="col">{column}</th>)}</tr></thead>
+              <tbody>{sohTable.rows.map(row => <tr class:list={{'flowbatt-row':row.emphasis==='best'}}>
+                <th scope="row">{row.method}</th>
+                {row.values.map(value => <td>{row.emphasis==='best' ? <strong>{value}</strong> : row.emphasis==='second' ? <span class="second-best">{value}</span> : value}</td>)}
+              </tr>)}</tbody>
+            </table>
+          </div>
+          <p class="table-scroll-hint">Scroll horizontally for all five datasets.</p>
+        </div>
+        <div class="reading-width prose results-discussion"><p><PaperText text={resultsFindings} /></p></div>
+        <section class="rul-section" id="rul-prediction" aria-labelledby="rul-title">
+          <div class="reading-width prose">
+            <h3 id="rul-title">RUL prediction</h3>
+            <p>{rulDiscussion}</p>
+          </div>
+          <figure class="reading-width rul-figure" aria-labelledby="rul-caption">
+            <RulPlots />
+            <figcaption id="rul-caption">{rulCaption}</figcaption>
+          </figure>
+        </section>
+        <section class="xai-section" id="xai-encoder" aria-labelledby="xai-title">
+          <div class="reading-width prose">
+            <h3 id="xai-title">XAI-guided encoder design</h3>
+            <p>{xaiDiscussion}</p>
+          </div>
+          <figure class="reading-width xai-figure" aria-labelledby="xai-caption">
+            <XaiHeatmaps />
+            <figcaption id="xai-caption">{xaiCaption}</figcaption>
+          </figure>
+        </section>
+      </section>
+
+      <section class="article-section" id="conclusions" aria-labelledby="conclusions-title">
+        <div class="reading-width">
+          <h2 class="section-heading" id="conclusions-title">Conclusions and outlook</h2>
+          <div class="prose">
+            <p><PaperText text={closingConclusion} /></p>
+            <h3>Outlook</h3>
+            <p><PaperText text={closingOutlook} /></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="citation-section" id="citation" aria-labelledby="citation-title">
+        <div class="reading-width">
+          <div class="citation-heading section-heading"><h2 id="citation-title">BibTeX</h2><button class="copy-button" id="copy-citation" type="button" aria-label="Copy BibTeX">Copy</button></div>
+          <pre tabindex="0" aria-label="FlowBatt BibTeX citation"><code id="citation-text">{citation}</code></pre>
+          <span id="copy-status" role="status" aria-live="polite"></span>
+        </div>
+      </section>
+    </main>
+    <footer class="page-footer">
+      <div class="reading-width">
+        <p>Correspondence: <a href="mailto:h.eivazi@tu-braunschweig.de">h.eivazi@tu-braunschweig.de</a></p>
+        <div class="institution-logos" aria-label="Author institutions">
+          <a href="https://www.tu-braunschweig.de/en/" class="braunschweig-logo"><img src={`${base}logos/tu-braunschweig.svg`} alt="Technische Universität Braunschweig" width="198" height="74" loading="lazy" /></a>
+          <a href="https://www.tu-clausthal.de/en/" class="clausthal-logo"><img src={`${base}logos/tu-clausthal-small.svg`} alt="TU Clausthal" width="230" height="43" loading="lazy" /></a>
+        </div>
+        <p class="acknowledgments">{acknowledgments}</p>
+      </div>
+    </footer>
+    <script>
+      document.querySelector('#copy-citation')?.addEventListener('click', async () => {
+        const content = document.querySelector('#citation-text')?.textContent;
+        const status = document.querySelector('#copy-status');
+        if (!content || !status) return;
+        try {
+          await navigator.clipboard.writeText(content);
+          status.textContent = 'Citation copied.';
+        } catch {
+          status.textContent = 'Select and copy the citation above.';
+        }
+      });
+    </script>
+  </body>
+</html>

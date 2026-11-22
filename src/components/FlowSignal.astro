@@ -1,0 +1,16 @@
+---
+interface Props { d: string; offset?: number; conditioning?: boolean; }
+const {d,offset=0,conditioning=false}=Astro.props;
+---
+<g class:list={['flow-signal',{conditioning}]} data-flow-signal data-offset={offset} aria-hidden="true">
+  <path d={d} data-flow-track />
+  <circle r=".32" data-flow-packet data-tail=".055" />
+  <circle r=".52" data-flow-packet data-tail="0" />
+</g>
+<style>
+  path { fill:none; stroke:var(--paper-curve); stroke-width:.44; opacity:.48; stroke-linecap:round; }
+  circle { fill:var(--paper-curve); opacity:0; }
+  .conditioning path { stroke:var(--paper-block); opacity:.34; }
+  .conditioning circle { fill:var(--paper-block); }
+  @media(prefers-reduced-motion:reduce) { circle { display:none; } }
+</style>

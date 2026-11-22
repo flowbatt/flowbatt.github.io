@@ -1,0 +1,169 @@
+---
+const sketchPath = Array.from({ length: 121 }, (_, index) => {
+  const position = index / 120;
+  const x = 47 + position * 522;
+  const y = 49 + 24 * position + 108 * Math.pow(position, 2.7);
+  return `${index === 0 ? 'M' : 'L'}${x.toFixed(2)},${y.toFixed(2)}`;
+}).join(' ');
+---
+
+<div class="generation-preview" data-generation-preview>
+  <div class="preview-heading">
+    <div class="preview-label"><span aria-hidden="true"></span> From noise to a trajectory</div>
+    <span class="time-readout" data-generation-readout aria-hidden="true">t = 1.00</span>
+  </div>
+
+  <svg class="generation-chart" viewBox="0 0 600 250" role="img" aria-label="Conceptual illustration of a noisy state becoming a smooth battery degradation trajectory. This sketch does not show model predictions.">
+    <g class="chart-grid" aria-hidden="true">
+      <line x1="47" y1="48" x2="569" y2="48" />
+      <line x1="47" y1="100" x2="569" y2="100" />
+      <line x1="47" y1="152" x2="569" y2="152" />
+      <line x1="47" y1="204" x2="569" y2="204" />
+    </g>
+    <path class="target-path" d={sketchPath} />
+    <path class="state-path" data-generation-path d={sketchPath} />
+    <g class="axis-labels" aria-hidden="true">
+      <text x="47" y="223">Early life</text>
+      <text x="569" y="223" text-anchor="end">Later life</text>
+      <text x="308" y="245" text-anchor="middle">Battery cycle (conceptual)</text>
+      <text transform="translate(16 127) rotate(-90)" text-anchor="middle">Relative health</text>
+    </g>
+  </svg>
+
+  <div class="chart-legend" aria-hidden="true">
+    <span><i class="legend-state"></i> Illustrative state</span>
+    <span><i class="legend-target"></i> Trajectory sketch</span>
+  </div>
+
+  <div class="generation-controls" data-generation-controls hidden>
+    <button type="button" class="play-control" data-generation-play>Replay transition</button>
+    <label class="time-control">
+      <span>Flow time <i>t</i></span>
+      <input data-generation-slider type="range" min="0" max="1" step="0.01" value="1" aria-label="Generation time, from noise at zero to trajectory sketch at one" aria-valuetext="1.00: trajectory sketch" />
+      <span class="range-endpoints" aria-hidden="true"><span>0 · Noise</span><span>1 · Trajectory</span></span>
+    </label>
+  </div>
+  <p class="motion-note" data-generation-motion hidden>Reduced motion: use the slider to step through the illustration.</p>
+  <p class="generation-caption">Illustrative animation · model states will replace this sketch</p>
+  <p class="time-note">Flow time describes the construction of a curve; the horizontal axis describes battery cycling.</p>
+</div>
+
+<script>
+  const previews = document.querySelectorAll<HTMLElement>('[data-generation-preview]');
+
+  previews.forEach((preview) => {
+    const path = preview.querySelector('[data-generation-path]');
+    const slider = preview.querySelector('[data-generation-slider]');
+    const button = preview.querySelector('[data-generation-play]');
+    const readout = preview.querySelector('[data-generation-readout]');
+    const controls = preview.querySelector('[data-generation-controls]');
+    const motionNote = preview.querySelector('[data-generation-motion]');
+
+    if (!(path instanceof SVGPathElement) || !(slider instanceof HTMLInputElement) ||
+        !(button instanceof HTMLButtonElement) || !(readout instanceof HTMLElement) ||
+        !(controls instanceof HTMLElement) || !(motionNote instanceof HTMLElement)) return;
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let progress = 1;
+    let playing = false;
+    let frame = 0;
+
+    function draw(value: number) {
+      progress = Math.max(0, Math.min(1, value));
+      const amplitude = 35 * Math.pow(1 - progress, 1.4);
+      const curve = Array.from({ length: 121 }, (_, index) => {
+        const position = index / 120;
+        const x = 47 + position * 522;
+        const target = 49 + 24 * position + 108 * Math.pow(position, 2.7);
+        const noise = 0.62 * Math.sin(position * 72 + 0.5) + 0.38 * Math.sin(position * 141 + 1.8);
+        const y = target + amplitude * noise;
+        return `${index === 0 ? 'M' : 'L'}${x.toFixed(2)},${y.toFixed(2)}`;
+      }).join(' ');
+      path.setAttribute('d', curve);
+      slider.value = progress.toFixed(2);
+      slider.setAttribute('aria-valuetext', `${progress.toFixed(2)}${progress === 0 ? ': noise sketch' : progress === 1 ? ': trajectory sketch' : ': illustrative intermediate state'}`);
+      readout.textContent = `t = ${progress.toFixed(2)}`;
+      button.textContent = playing ? 'Pause transition' : progress >= 1 ? 'Replay transition' : 'Play transition';
+    }
+
+    function pause() {
+      playing = false;
+      window.cancelAnimationFrame(frame);
+      draw(progress);
+    }
+
+    button.addEventListener('click', () => {
+      if (playing) {
+        pause();
+        return;
+      }
+      if (reducedMotion.matches) return;
+      if (progress >= 1) draw(0);
+      const initialProgress = progress;
+      const startedAt = performance.now();
+      playing = true;
+      draw(progress);
+
+      function tick(now: number) {
+        if (!playing) return;
+        const next = Math.min(1, initialProgress + (now - startedAt) / 5200);
+        if (next >= 1) playing = false;
+        draw(next);
+        if (playing) frame = window.requestAnimationFrame(tick);
+      }
+
+      frame = window.requestAnimationFrame(tick);
+    });
+
+    slider.addEventListener('input', () => {
+      const selected = Number(slider.value);
+      pause();
+      if (Number.isFinite(selected)) draw(selected);
+    });
+
+    function applyMotionPreference() {
+      if (reducedMotion.matches) pause();
+      button.hidden = reducedMotion.matches;
+      motionNote.hidden = !reducedMotion.matches;
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) pause();
+    });
+    reducedMotion.addEventListener('change', applyMotionPreference);
+    applyMotionPreference();
+    controls.hidden = false;
+  });
+</script>
+
+<style>
+  .generation-preview { color: var(--ink, #111111); background: var(--paper, #fff); border: 1px solid var(--line, #dde1e7); border-radius: 2px; padding: 28px; }
+  .preview-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .preview-label { display: flex; align-items: center; gap: 9px; font-family: var(--figure-font, 'Computer Modern', Georgia, serif); font-size: 1.125rem; font-weight: 700; }
+  .preview-label > span { width: 7px; height: 7px; flex: 0 0 7px; background: var(--navy, #17365d); border-radius: 50%; }
+  .time-readout { font-family: var(--figure-font, 'Computer Modern', Georgia, serif); font-size: 1.125rem; white-space: nowrap; color: var(--muted, #5d6470); }
+  .generation-chart { display: block; width: 100%; height: auto; margin: 20px 0 8px; overflow: visible; font-family: var(--figure-font, 'Computer Modern', Georgia, serif); }
+  .chart-grid { stroke: var(--line, #dde1e7); stroke-width: 1; stroke-dasharray: 3 5; }
+  .target-path, .state-path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .target-path { stroke: var(--navy, #17365d); stroke-width: 2; stroke-dasharray: 6 5; opacity: .8; }
+  .state-path { stroke: var(--magenta, #c2188b); stroke-width: 3; }
+  .axis-labels { fill: var(--muted, #5d6470); font-size: 15px; font-family: inherit; }
+  .chart-legend { display: flex; flex-wrap: wrap; gap: 12px 22px; margin: 10px 0 25px; font-family: var(--figure-font, 'Computer Modern', Georgia, serif); font-size: 1rem; color: var(--muted, #5d6470); }
+  .chart-legend span { display: flex; align-items: center; gap: 7px; }
+  .chart-legend i { display: inline-block; width: 18px; height: 0; border-top: 2px solid; }
+  .legend-state { color: var(--magenta, #c2188b); }
+  .chart-legend .legend-target { color: var(--navy, #17365d); border-top-style: dashed; }
+  .generation-controls { display: flex; align-items: center; gap: 24px; padding-top: 18px; border-top: 1px solid var(--line, #dde1e7); }
+  [hidden] { display: none !important; }
+  .play-control { appearance: none; background: var(--ink, #111111); color: #fff; border: 1px solid var(--ink, #111111); border-radius: 4px; padding: 12px 16px; font: inherit; font-size: .8rem; font-weight: 600; white-space: nowrap; cursor: pointer; }
+  .play-control:hover { background: #373a40; border-color: var(--navy, #17365d); }
+  .play-control:focus-visible, input:focus-visible { outline: 3px solid var(--magenta, #c2188b); outline-offset: 4px; }
+  .time-control { display: grid; flex: 1; gap: 4px; font-size: .8rem; }
+  .time-control input { width: 100%; min-height: 25px; margin: 0; accent-color: var(--navy, #17365d); cursor: pointer; }
+  .range-endpoints { display: flex; justify-content: space-between; color: var(--muted, #5d6470); font-size: .75rem; }
+  .generation-caption { color: var(--muted, #5d6470); font-size: .8rem; line-height: 1.5; margin: 22px 0 0; }
+  .time-note, .motion-note { color: var(--muted, #5d6470); font-size: .8rem; line-height: 1.6; margin: 7px 0 0; }
+  @media (max-width: 600px) { .generation-preview { padding: 20px 14px; } .generation-controls { align-items: stretch; flex-direction: column; gap: 20px; } .play-control { align-self: flex-start; padding: 11px 15px; } .preview-label { font-size: 1rem; } .time-readout { font-size: 1rem; } }
+  @media (max-width: 600px) { .axis-labels { font-size: 23px; } .axis-labels text:last-child { font-size: 20px; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+</style>

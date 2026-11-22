@@ -1,0 +1,9 @@
+---
+// Original Figure 4 artwork; only the font changes to Source Sans 3.
+import paperRow from '../../public/figures/rul/rul-one-row.svg?raw';
+---
+<div class="rul-panels" set:html={paperRow} />
+
+<style>
+  .rul-panels :global(svg) { display: block; width: 100%; height: auto; }
+</style>

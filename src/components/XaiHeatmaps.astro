@@ -1,0 +1,47 @@
+---
+// Unmodified camera-ready raster artwork. The SVG viewport excludes only
+// surrounding white space; panel labels use the site's Source Sans 3 font.
+const base = import.meta.env.BASE_URL;
+const panels = [
+  {
+    key: 'input',
+    label: '(a) capacity matrices',
+    file: 'heatmaps_test_data.png',
+    description: 'Capacity matrices for the 42 MATR-1 test batteries, arranged in the original paper order.',
+  },
+  {
+    key: 'relu',
+    label: '(b) CNN · ReLU',
+    file: 'heatmaps_bml_cnn_3.png',
+    description: 'Original paper Grad-CAM maps for the ReLU CNN failure example. Several test cells have blank maps.',
+  },
+  {
+    key: 'leaky-relu',
+    label: '(c) XAI-CNN · LeakyReLU',
+    file: 'heatmaps_cnn_3.png',
+    description: 'Original paper Grad-CAM maps for XAI-CNN, showing localized attribution patterns across the test cells.',
+  },
+];
+---
+<div class="xai-panels">
+  {panels.map(panel => <div class="xai-panel">
+    <p class="xai-panel-label" id={`xai-${panel.key}-label`}>{panel.label}</p>
+    <svg viewBox="20 20 833 710" role="img" aria-labelledby={`xai-${panel.key}-label xai-${panel.key}-description`}>
+      <desc id={`xai-${panel.key}-description`}>{panel.description}</desc>
+      <image href={`${base}figures/xai/${panel.file}`} width="873" height="868" />
+    </svg>
+  </div>)}
+</div>
+
+<style>
+  .xai-panels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; }
+  .xai-panel { min-width: 0; }
+  .xai-panel-label { margin: 0 0 .65rem; font-family: var(--figure-font); font-size: .875rem; font-weight: 400; line-height: 1.4; text-align: left; color: var(--ink); }
+  .xai-panel svg { display: block; width: 100%; height: auto; overflow: hidden; }
+  @media (max-width: 600px) {
+    .xai-panels { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; max-width: 360px; margin-inline: auto; }
+  }
+  @media print {
+    .xai-panels { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: none; gap: 1rem; }
+  }
+</style>

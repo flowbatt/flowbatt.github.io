@@ -1,0 +1,189 @@
+---
+import example from '../data/overview-example.json';
+import trainingExample from '../data/training-example.json';
+import layout from '../../public/figures/figure1-layout.json';
+import SchematicPlot from './SchematicPlot.astro';
+import FlowSignal from './FlowSignal.astro';
+
+const base = import.meta.env.BASE_URL;
+const { capacity, trajectories, generation } = example;
+const inferenceXMax = example.metadata.recommendedInferenceView.cycleLimits[1];
+const { training, normalization } = trainingExample;
+const { boxes } = layout;
+const [,, width, height] = layout.viewBox;
+const centerX = (box: number[]) => box[0]+box[2]/2;
+const centerY = (box: number[]) => box[1]+box[3]/2;
+const right = (box: number[]) => box[0]+box[2];
+const bottom = (box: number[]) => box[1]+box[3];
+// Keep packets and connector caps outside artwork and the plot's y-axis labels.
+const artworkGap = 1.8;
+const plotEntry = (box: number[]) => box[0]-5.5;
+const exit = (box: number[]) => right(box)+artworkGap;
+const entry = (box: number[]) => box[0]-artworkGap;
+const soh = (values: number[]) => values.map(value => Number((100*((value+1)/2*(normalization.maximum-normalization.minimum+normalization.epsilon)+normalization.minimum)).toFixed(6)));
+const trainingStates = training.statesNormalized.map(soh);
+const last = generation.times.length-1;
+const reference = trajectories.reference.slice(0,trajectories.referenceDisplayLength);
+const trainNoise = soh(training.x0Normalized), trainData = soh(training.x1Normalized);
+const capacityBox=boxes.capacity;
+const playback = {
+  times:generation.times, states:generation.states, cycles:trajectories.cycles, inferenceXMax,
+  observedCount:trajectories.observedCount, trainingStates,
+  trainingVelocity:training.predictedVelocityNormalized,
+  trainingCycles:training.cycles, trainingObservedCount:training.observedCount,
+  boxes:{interpolant:boxes.trainingInterpolant,velocity:boxes.trainingVelocity,output:boxes.output},
+};
+---
+
+<div class="paper-overview" id="schematic-overview" data-paper-overview style={`--paper-curve:${layout.colors.curve};--paper-block:${layout.colors.ditStroke}`}>
+  <div class="diagram-scroll" role="region" aria-label="Animated Figure 1.">
+    <svg class="paper-diagram" viewBox={layout.viewBox.join(' ')} role="img" aria-labelledby="paper-diagram-title paper-diagram-description">
+      <title id="paper-diagram-title">FlowBatt: conditional flow-matching training and inference</title>
+      <desc id="paper-diagram-description">Training pairs initialized noise with a real training trajectory. A straight interpolant enters the DiT, whose predicted velocity is compared with the target data minus noise. This animation sweeps flow time at a fixed pretrained checkpoint, not optimization steps. The conditioning panel shows one real test-cell capacity matrix as an example of the shared encoder. Training uses its separately matched input. Inference replays 101 recorded ODE states for the test example. SOH axes stay at 80 to 110 percent, clipping out-of-window noise. The training velocity plot uses normalized units from minus 4 to 4.</desc>
+      <image href={`${base}figures/figure1-background.svg`} x="0" y="0" width={width} height={height} />
+
+      <g class="panel-guides" aria-hidden="true">
+        <rect x=".3" y=".3" width="177.42" height="35.8" />
+        <rect x=".3" y="38.85" width="69.8" height="33.04" />
+        <rect x="71.45" y="38.85" width="106.27" height="33.04" />
+      </g>
+      <g class="paper-labels">
+        <text x="3" y="4.5" class="panel-label" text-anchor="start">a) flow-matching training</text>
+        <text x={centerX(boxes.trainingNoise)} y="9.6">noise</text>
+        <text x={centerX(boxes.trainingData)} y="9.6">training data</text>
+        <text x={centerX(boxes.trainingInterpolant)} y="9.6">interpolated state</text>
+        <text x={centerX(boxes.trainingDiT)} y="9.6">dit</text>
+        {boxes.trainingBlocks.map(box => <text class="block-label" transform={`translate(${centerX(box)} ${centerY(box)}) rotate(-90)`}>dit block</text>)}
+        <text x={centerX(boxes.trainingVelocity)} y="9.6">velocity matching</text>
+        {[boxes.trainingNoise,boxes.trainingData,boxes.trainingInterpolant].map(box => <text x={centerX(box)} y="33" class="small-label">soh (%) · cycle</text>)}
+        <text x={centerX(boxes.trainingDiT)} y="33" class="small-label">capacity conditioning</text>
+        <text x={centerX(boxes.trainingVelocity)} y="33" class="small-label">normalized velocity · cycle</text>
+
+        <text x="3" y="42.7" class="panel-label" text-anchor="start">b) conditioning</text>
+        <text x={centerX(capacityBox)} y="48">capacity matrix</text>
+        <text transform={`translate(${capacityBox[0]-3} ${centerY(capacityBox)}) rotate(-90)`} class="small-label">voltage grid</text>
+        <text x={centerX(capacityBox)} y="70.2" class="small-label">cycle number</text>
+        <text x={centerX(boxes.encoder)} y="48">q-enc</text>
+        <text x={centerX(boxes.embedding)} y="70.2" class="small-label">embedding</text>
+
+        <text x="74" y="42.7" class="panel-label" text-anchor="start">c) inference</text>
+        <text x={centerX(boxes.input)} y="48">noise</text>
+        <text x={centerX(boxes.inferenceDiT)} y="42.7" class="small-label">learned flow</text>
+        <text x={centerX(boxes.inferenceDiT)} y="48">dit</text>
+        {boxes.inferenceBlocks.map(box => <text class="block-label" transform={`translate(${centerX(box)} ${centerY(box)}) rotate(-90)`}>dit block</text>)}
+        <text x={centerX(boxes.inferenceDiT)} y="70.2" class="small-label">capacity conditioning</text>
+        <text x={centerX(boxes.output)} y="48" data-output-label>soh sample</text>
+        {[boxes.input,boxes.output].map(box => <text x={centerX(box)} y="70.2" class="small-label">soh (%) · cycle</text>)}
+      </g>
+
+      <g class="capacity-plot">
+        <image href={`${base}${capacity.paperImage}`} x={capacityBox[0]} y={capacityBox[1]} width={capacityBox[2]} height={capacityBox[3]} preserveAspectRatio="none" style="image-rendering:pixelated" />
+        <rect x={capacityBox[0]} y={capacityBox[1]} width={capacityBox[2]} height={capacityBox[3]} fill="none" stroke="#111" stroke-width=".34" />
+        <text x={capacityBox[0]} y={bottom(capacityBox)+1.7}>1</text><text x={right(capacityBox)} y={bottom(capacityBox)+1.7}>100</text>
+      </g>
+
+      <SchematicPlot id="paper-training-noise" box={boxes.trainingNoise} cycles={training.cycles} xMax={2500} lines={[{values:trainNoise,kind:'sample'},{values:trainNoise.slice(0,training.observedCount),kind:'observed'}]} />
+      <SchematicPlot id="paper-training-data" box={boxes.trainingData} cycles={training.cycles} xMax={2500} lines={[{values:trainData,kind:'data'}]} />
+      <SchematicPlot id="paper-training-state" box={boxes.trainingInterpolant} cycles={training.cycles} xMax={2500} lines={[{values:trainingStates[last],kind:'sample',key:'training-state'},{values:trainingStates[last].slice(0,training.observedCount),kind:'observed',key:'training-observed'}]} />
+      <SchematicPlot id="paper-training-velocity" box={boxes.trainingVelocity} cycles={training.cycles} xMax={2551} limits={[-4,4]} ticks={[-4,0,4]} lines={[{values:training.targetVelocityNormalized,kind:'target'},{values:training.predictedVelocityNormalized[last],kind:'sample',key:'training-velocity'}]} />
+      <SchematicPlot id="paper-inference-noise" box={boxes.input} cycles={trajectories.cycles} xMax={inferenceXMax} lines={[{values:generation.states[0],kind:'sample'},{values:generation.states[0].slice(0,trajectories.observedCount),kind:'observed'}]} />
+      <SchematicPlot id="paper-inference-state" box={boxes.output} cycles={trajectories.cycles} xMax={inferenceXMax} lines={[{values:generation.states[last],kind:'sample',key:'inference-state'},{values:reference,kind:'reference',key:'reference'},{values:generation.states[last].slice(0,trajectories.observedCount),kind:'observed',key:'inference-observed'}]} />
+
+      <g class="motion-overlay" aria-hidden="true">
+        <FlowSignal d={`M${exit(boxes.trainingNoise)} 19.5 C36 19.5 33 29.2 40 29.2 H65 Q73 29.2 73 23 Q73 19.5 ${plotEntry(boxes.trainingInterpolant)} 19.5`} offset={0} />
+        <FlowSignal d={`M${exit(boxes.trainingData)} 19.5 H${plotEntry(boxes.trainingInterpolant)}`} offset={.15} />
+        <FlowSignal d={`M${exit(boxes.trainingInterpolant)} 19.5 H${entry(boxes.trainingDiT)}`} offset={.3} />
+        <FlowSignal d={`M${exit(boxes.trainingDiT)} 19.5 H${plotEntry(boxes.trainingVelocity)}`} offset={.5} />
+        <FlowSignal d={`M${exit(capacityBox)} 58 H${entry(boxes.encoder)}`} offset={0} conditioning />
+        <FlowSignal d={`M${exit(boxes.encoder)} 58 H${entry(boxes.embedding)}`} offset={.25} conditioning />
+        <FlowSignal d={`M${exit(boxes.input)} 58 H${entry(boxes.inferenceDiT)}`} offset={0} />
+        <FlowSignal d={`M${exit(boxes.inferenceDiT)} 58 H${plotEntry(boxes.output)}`} offset={.5} />
+        <FlowSignal d={`M${exit(boxes.inferenceDiT)} 56.2 C${exit(boxes.inferenceDiT)+6.3} 56.2 ${exit(boxes.inferenceDiT)+6.3} 45.3 ${exit(boxes.inferenceDiT)} 45.3 H${entry(boxes.inferenceDiT)} C${entry(boxes.inferenceDiT)-6.3} 45.3 ${entry(boxes.inferenceDiT)-6.3} 56.2 ${entry(boxes.inferenceDiT)} 56.2`} offset={.2} />
+        {[{model:boxes.trainingDiT,blocks:boxes.trainingBlocks},{model:boxes.inferenceDiT,blocks:boxes.inferenceBlocks}].map(({model,blocks}) => blocks.map((box,i)=><FlowSignal d={`M${centerX(model)} ${bottom(model)+3.4} Q${centerX(box)} ${bottom(model)+3.4} ${centerX(box)} ${bottom(model)+1.5}`} offset={i*.07} conditioning />))}
+        {[...boxes.trainingBlocks,...boxes.inferenceBlocks].map((box,i)=><rect class="active-block" data-active-block={i%4} x={box[0]} y={box[1]} width={box[2]} height={box[3]} />)}
+      </g>
+    </svg>
+  </div>
+
+  <script type="application/json" data-paper-payload set:html={JSON.stringify(playback).replace(/</g,'\\u003c')} />
+</div>
+
+<script>
+  import {curvePath,frameAt,playbackTiming} from '../lib/schematic';
+  document.querySelectorAll<HTMLElement>('[data-paper-overview]').forEach(root=>{
+    const payload=root.querySelector('[data-paper-payload]');
+    if(!payload?.textContent)return;
+    const data=JSON.parse(payload.textContent) as {
+      times:number[];states:number[][];cycles:number[];observedCount:number;inferenceXMax:number;
+      trainingStates:number[][];trainingVelocity:number[][];trainingCycles:number[];trainingObservedCount:number;
+      boxes:{interpolant:number[];velocity:number[];output:number[]};
+    };
+    const motion=matchMedia('(prefers-reduced-motion: reduce)');
+    const signals=Array.from(root.querySelectorAll<SVGGElement>('[data-flow-signal]')).map(group=>{
+      const path=group.querySelector<SVGPathElement>('[data-flow-track]')!;
+      return {path,length:path.getTotalLength(),offset:Number(group.dataset.offset),packets:Array.from(group.querySelectorAll<SVGCircleElement>('[data-flow-packet]'))};
+    });
+    const blocks=Array.from(root.querySelectorAll<SVGRectElement>('[data-active-block]'));
+    let index=data.times.length-1,running=false,visible=false,frame=0,elapsed=0,started=0;
+    const plot=(key:string,values:number[],cycles:number[],box:number[],xMax:number,limits=[80,110])=>root.querySelector(`[data-plot="${key}"]`)!.setAttribute('d',curvePath(values,cycles,box,xMax,limits));
+    function draw(next:number){
+      index=next;
+      const state=data.states[index],trainingState=data.trainingStates[index];
+      plot('inference-state',state,data.cycles,data.boxes.output,data.inferenceXMax);
+      plot('inference-observed',state.slice(0,data.observedCount),data.cycles,data.boxes.output,data.inferenceXMax);
+      plot('training-state',trainingState,data.trainingCycles,data.boxes.interpolant,2500);
+      plot('training-observed',trainingState.slice(0,data.trainingObservedCount),data.trainingCycles,data.boxes.interpolant,2500);
+      plot('training-velocity',data.trainingVelocity[index],data.trainingCycles,data.boxes.velocity,2551,[-4,4]);
+      root.querySelector('[data-output-label]')!.textContent=index===data.times.length-1?'soh sample':'flow state';
+    }
+    function moveSignals(progress:number,active:boolean){
+      signals.forEach(signal=>signal.packets.forEach(packet=>{
+        const phase=((progress*3-signal.offset-Number(packet.dataset.tail))%1+1)%1;
+        const point=signal.path.getPointAtLength(phase*signal.length);
+        packet.setAttribute('cx',String(point.x));packet.setAttribute('cy',String(point.y));
+        packet.style.opacity=active?String(Math.sin(Math.PI*phase)*(.9-Number(packet.dataset.tail)*5)):'0';
+      }));
+      blocks.forEach(block=>{
+        const phase=((progress*3-Number(block.dataset.activeBlock)*.16)%1+1)%1;
+        block.style.opacity=active?String(Math.max(0,Math.cos((phase-.35)*Math.PI*2))*.32):'0';
+      });
+    }
+    function tick(now:number){
+      if(!running)return;
+      const current=(elapsed+now-started)%playbackTiming.duration;
+      const next=frameAt(current,data.times.length);
+      if(next!==index)draw(next);
+      const progress=Math.max(0,Math.min(1,(current-playbackTiming.firstHold)/(playbackTiming.duration-playbackTiming.firstHold-playbackTiming.lastHold)));
+      moveSignals(progress,progress>0&&progress<1);
+      frame=requestAnimationFrame(tick);
+    }
+    function stop(){
+      if(running)elapsed=(elapsed+performance.now()-started)%playbackTiming.duration;
+      running=false;cancelAnimationFrame(frame);moveSignals(0,false);
+    }
+    function syncPlayback(){
+      if(motion.matches){stop();draw(data.times.length-1);return;}
+      if(!visible||document.hidden){stop();return;}
+      if(!running){running=true;started=performance.now();tick(started);}
+    }
+    motion.addEventListener('change',syncPlayback);
+    document.addEventListener('visibilitychange',syncPlayback);
+    new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;syncPlayback();},{threshold:0}).observe(root);
+    syncPlayback();
+  });
+</script>
+
+<style>
+  .paper-overview { --paper-curve:#e375c2; --figure-font:'Source Sans 3',Arial,sans-serif; color:#000; font-family:var(--figure-font); font-weight:400; }
+  .paper-diagram { display:block; width:100%; height:auto; background:white; }
+  .panel-guides rect { fill:none; stroke:#cbd0d8; stroke-width:.18; }
+  .paper-labels text,.capacity-plot text { font-family:var(--figure-font); font-size:2.8px; font-weight:400; fill:#000; text-anchor:middle; dominant-baseline:middle; }
+  .paper-labels text[text-anchor='start'] { text-anchor:start; }
+  .paper-labels .panel-label { font-size:3px; }
+  .paper-labels .block-label { font-size:2px; }
+  .paper-labels .small-label { font-size:2.1px; }
+  .capacity-plot text { font-size:2.5px; }
+  .motion-overlay { pointer-events:none; }
+  .active-block { fill:#f5c7e9; opacity:0; }
+  @media(prefers-reduced-motion:reduce) { .active-block { opacity:0!important; } }
+</style>

@@ -1,0 +1,95 @@
+STIX Two Text Bold — source, license, and validation
+==================================================
+
+Acquired: 2026-11-22
+Family: STIX Two Text
+Full font name: STIX Two Text Bold
+PostScript name: STIXTwoText-Bold
+Version: 2.13 b171
+Style: normal (upright)
+Weight: 700 (static Bold instance; no variable axes)
+
+The files below are unmodified official release assets. Only the local file
+names are lowercased and hyphenated; no font data was altered or subsetted.
+Use the WOFF2 for the website; the TTF is the equivalent verified fallback.
+
+Official project:
+https://stixfonts.org/
+https://github.com/stipub/stixfonts
+
+Pinned release:
+https://github.com/stipub/stixfonts/releases/tag/v2.13b171
+
+Local: stix-two-text-bold.woff2
+Source:
+https://raw.githubusercontent.com/stipub/stixfonts/v2.13b171/fonts/static_ttf_woff2/STIXTwoText-Bold.woff2
+Bytes: 131496
+SHA-256: 78fc32cd7a02cacb2a6fd4b7fb195c729e4115776aec57a9a3c40395b50a97d3
+
+Local: stix-two-text-bold.ttf
+Source:
+https://raw.githubusercontent.com/stipub/stixfonts/v2.13b171/fonts/static_ttf/STIXTwoText-Bold.ttf
+Bytes: 395644
+SHA-256: 89adbb9907c40465e061f084598dbebd5a802e30c6e2d38612205b9c87281cae
+
+License
+-------
+SIL Open Font License 1.1 (OFL-1.1).
+The official license permits embedding and redistribution with its copyright
+notice and license retained. Keep LICENSE-STIX.txt with the font assets.
+
+Local: LICENSE-STIX.txt
+Source:
+https://raw.githubusercontent.com/stipub/stixfonts/v2.13b171/OFL.txt
+
+Local: FONTLOG-STIX.txt
+Source:
+https://raw.githubusercontent.com/stipub/stixfonts/v2.13b171/FONTLOG.txt
+
+Checks
+------
+Both the WOFF2 and TTF were parsed with the existing local fontTools package.
+Both report OS/2 usWeightClass=700, the Bold style flag, and head macStyle Bold.
+Neither contains an fvar table. Both have OS/2 fsType=0.
+Their Unicode character maps and horizontal glyph metrics are identical.
+
+Coverage checked: uppercase/lowercase Latin, digits, spaces, SOH (%), cycle,
+middle dot (U+00B7), mathematical minus (U+2212), en dash (U+2013), em dash
+(U+2014), plus, equals, Greek capital delta, and Greek theta. All characters
+currently used in MethodOverview.astro, SchematicPlot.astro, and
+FlowSignal.astro are covered.
+
+This is a text face, not STIX Two Math. It does not include every mathematical
+symbol; for example, right arrow and infinity are absent. Those symbols are
+not used by the current schematic text.
+
+No system fonts were installed, no packages were installed, and no system
+settings were changed. A locally installed STIX Two Text variable font was
+inspected, but the official static Bold assets were selected for explicit
+700-weight web embedding.
+
+Regular face for paper results tables
+------------------------------------
+Acquired: 2026-11-22
+Family: STIX Two Text
+Full font name: STIX Two Text Regular
+Version: 2.13 b171
+Style: normal (upright)
+Weight: 400 (static Regular instance; no variable axes)
+
+Local: stix-two-text-regular.woff2
+Source:
+https://raw.githubusercontent.com/stipub/stixfonts/v2.13b171/fonts/static_ttf_woff2/STIXTwoText-Regular.woff2
+Bytes: 131412
+SHA-256: d44636fb9e8f2b35f5135db71ee5303ab5f8ddb7a43f2eaa6f4d73047cfd7478
+
+This is another unmodified official release asset under the same SIL Open
+Font License 1.1 recorded above. The existing LICENSE-STIX.txt covers it.
+Only the local filename is changed; the font is not modified or subsetted.
+
+The existing local fontTools package verified usWeightClass=400, no fvar
+variable-font table, and OS/2 fsType=0. Its Unicode cmap maps U+00B1 (PLUS-MINUS
+SIGN) to the plusminus glyph, glyph ID 2078. U+FB03 (LATIN SMALL LIGATURE FFI)
+maps to the distinct f_f_i glyph, glyph ID 666. Use this genuine 400 face for
+regular-weight paper-table values so their ± symbols do not fall back to the
+legacy Computer Modern TTF encoding. No system fonts or packages were installed.

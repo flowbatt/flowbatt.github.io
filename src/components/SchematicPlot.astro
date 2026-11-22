@@ -1,0 +1,32 @@
+---
+import { curvePath } from '../lib/schematic';
+interface Props {
+  id: string; box: number[]; cycles: number[]; xMax: number;
+  limits?: number[]; ticks?: number[]; xTicks?: number[];
+  lines: { values: number[]; kind: string; key?: string }[];
+}
+const {id,box,cycles,xMax,limits=[80,110],ticks=[80,100,110],xTicks=[0,xMax],lines}=Astro.props;
+const [x,y,width,height]=box;
+---
+<g class="schematic-plot">
+  <defs><clipPath id={id}><rect x={x} y={y} width={width} height={height} /></clipPath></defs>
+  <rect fill="#fff" x={x} y={y} width={width} height={height} />
+  {ticks.map(value=><g>
+    <path class="plot-grid" d={`M${x} ${y+height-(value-limits[0])/(limits[1]-limits[0])*height}h${width}`} />
+    <text class="tick y-tick" x={x-.65} y={y+height-(value-limits[0])/(limits[1]-limits[0])*height}>{value}</text>
+  </g>)}
+  {xTicks.map(value=><text class="tick" x={x+value/xMax*width} y={y+height+1.7}>{Math.round(value)}</text>)}
+  <g clip-path={`url(#${id})`}>
+    {lines.map(line=><path class={`plot-line ${line.kind}`} data-plot={line.key} d={curvePath(line.values,cycles,box,xMax,limits)} />)}
+  </g>
+  <rect class="plot-frame" x={x} y={y} width={width} height={height} />
+</g>
+<style>
+  .plot-frame { fill:none; stroke:#111; stroke-width:.34; }
+  .plot-grid { fill:none; stroke:#e1e7ed; stroke-width:.13; }
+  .tick { font-family:var(--figure-font); font-size:2.5px; font-weight:400; fill:#000; text-anchor:middle; dominant-baseline:middle; }
+  .y-tick { text-anchor:end; }
+  .plot-line { fill:none; stroke:var(--paper-curve); stroke-width:.38; stroke-linejoin:round; stroke-linecap:round; }
+  .target,.reference { stroke:#111; stroke-width:.32; stroke-dasharray:.8 .55; opacity:.8; }
+  .observed,.data { stroke:#111; stroke-width:.42; }
+</style>
